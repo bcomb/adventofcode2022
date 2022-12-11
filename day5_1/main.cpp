@@ -12,7 +12,7 @@ typedef std::vector<std::vector<char>> Supplies;
 const char* parseSupplies(const char* input, Supplies& s)
 {
     const char* end_first_line = strchr(input, '\n');
-    int line_length = end_first_line - input + 1;
+    size_t line_length = end_first_line - input + 1;
     int num_stack = (int)(line_length / 4);
 
     s.resize(num_stack);
