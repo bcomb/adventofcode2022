@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -6,7 +5,7 @@
 #include <assert.h>
 #include "../day3_input.h"
 
-unsigned itemCount(const char* input)
+unsigned lineLength(const char* input)
 {
     unsigned count = 0;
     while (!(*input == '\n' || *input == '\0'))
@@ -17,6 +16,8 @@ unsigned itemCount(const char* input)
     return count;
 }
 
+// Find the item present in the first and second slice
+// Slice1 [input, count/2], Slice2 [input+count/2, count/2]
 char wrongItem(const char* input, int count)
 {
     int half_size = count >> 1;
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
     unsigned item_count;
     do
     {      
-        item_count = itemCount(input);
+        item_count = lineLength(input);
         char c = wrongItem(input, item_count);
         sum += c < 'a' ? c - 'A' + 27: c - 'a' + 1;
         input += item_count + 1;
