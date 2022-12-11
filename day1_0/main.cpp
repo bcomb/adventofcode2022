@@ -1,55 +1,46 @@
-#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "../day1_input.h"
 
+unsigned lineLength(const char* input)
+{
+    unsigned count = 0;
+    while (!(*input == '\n' || *input == '\0'))
+    {
+        ++count;
+        ++input;
+    }
+    return count;
+}
+
 int main(int argc, char* argv[])
 {
-    uint32_t elfid = 0;
-    uint32_t max_calories = 0;
+    unsigned max_calories = 0;
+    unsigned current_elfid = 0;
+    unsigned current_calories = 0;
 
-    uint32_t current_elfid = 0;
-    uint32_t current_calories = 0;
-
-    // If current calories > max_calories
-    auto checkCalories = [&]()
-    {
-        if (current_calories > max_calories)
-        {
-            max_calories = current_calories;
-            elfid = current_elfid;
-        }
-    };
-
-    const char* r = day1_input;
+    const char* input = day1_input;
     do
     {
-        const char* next = strchr(r, '\n');
-        if (next == nullptr)    // Not found (read the last number)
-            next = strchr(r, '\0');
-        if (r == next) // blank, empty line
+        int length = lineLength(input);        
+        if (length == 0) // blank, empty line
         {
-            printf("Elf %d : %d\n", current_elfid, current_calories);
-            checkCalories();
+            if (current_calories > max_calories)
+                max_calories = current_calories;
 
-            ++current_elfid;
             current_calories = 0;
-            ++r;
         }
         else
         {            
-            int value = atoi(r);
+            int value = atoi(input);
             current_calories += value;
-            r = next + 1;
         }
 
-    } while(*r != '\0');
-    
-    // Don't forget the last elf count
-    checkCalories();
+        input += length + 1;
 
-    printf("The Elf (%d) have max calories (%d)\n", elfid, max_calories);
+    } while(*(input-1) != '\0');
     
+    printf("Result (%d)\n", max_calories);    
     return 0;
 }

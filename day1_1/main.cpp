@@ -1,63 +1,55 @@
-#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "../day1_input.h"
 
+unsigned lineLength(const char* input)
+{
+    unsigned count = 0;
+    while (!(*input == '\n' || *input == '\0'))
+    {
+        ++count;
+        ++input;
+    }
+    return count;
+}
+
 int main(int argc, char* argv[])
 {
-    uint32_t elfid[3];
-    uint32_t max_calories_per_elf[3] = {};   // keep it sorted in descendent order
+    unsigned current_elfid = 0;
+    unsigned current_calories = 0;
+    unsigned max_calories_per_elf[3] = {};   // keep it sorted in descendent order
 
-
-    uint32_t current_elfid = 0;
-    uint32_t current_calories = 0;
-
-    // If current calories > max_calories
-    auto checkCalories = [&]()
-    {
-        for (int i = 0; i < 3; ++i)
-        {
-            if (current_calories > max_calories_per_elf[i])
-            {
-                // shift and take the place
-                memmove(max_calories_per_elf + i + 1, max_calories_per_elf + i, sizeof(uint32_t) * (2 - i));
-                memmove(elfid + i + 1, elfid + i, sizeof(uint32_t) * (2 - i));
-                elfid[i] = current_elfid;
-                max_calories_per_elf[i] = current_calories;
-                break;
-            }               
-        }
-    };
-
-    const char* r = day1_input;
+    const char* input = day1_input;
     do
     {
-        const char* next = strchr(r, '\n');
-        if (next == nullptr)    // Not found (read the last number)
-            next = strchr(r, '\0');
-        if (r == next) // blank, empty line
+        int length = lineLength(input);
+        if (length == 0) // blank, empty line
         {
-            printf("Elf %d : %d\n", current_elfid, current_calories);
-            checkCalories();
+            for (int i = 0; i < 3; ++i)
+            {
+                if (current_calories > max_calories_per_elf[i])
+                {
+                    // shift and take the place
+                    memmove(max_calories_per_elf + i + 1, max_calories_per_elf + i, sizeof(unsigned) * (2 - i));
+                    max_calories_per_elf[i] = current_calories;
+                    break;
+                }
+            }
 
-            ++current_elfid;
             current_calories = 0;
-            ++r;
         }
         else
-        {            
-            int value = atoi(r);
+        {
+            int value = atoi(input);
             current_calories += value;
-            r = next + 1;
         }
 
-    } while(*r != '\0');
-    
-    // Don't forget the last elf count
-    checkCalories();
+        input += length + 1;
 
-    printf("Result : %d\n", max_calories_per_elf[0] + max_calories_per_elf[1] + max_calories_per_elf[2]);
-    
+    } while (*(input - 1) != '\0');
+
+    unsigned max_calories = max_calories_per_elf[0] + max_calories_per_elf[1] + max_calories_per_elf[2];
+    printf("Result (%d)\n", max_calories);
     return 0;
 }
