@@ -2,10 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <assert.h>
 #include <vector>
-#include <algorithm>
 #include "../day7_input.h"
 
 const int max_operand = 2;
@@ -260,27 +258,19 @@ int main()
         size_t current_size = root->byteSize();
         size_t remaining_space = disk_size - current_size;
 
-        std::vector<size_t> candidate;
+        size_t minimal_size_to_delete = ~0;
         auto step2_Fn = [&](Node* node)
         {
             size_t node_byte_size = node->byteSize();
-            if (remaining_space + node_byte_size >= require_size)
+            if (remaining_space + node_byte_size >= require_size
+                && node_byte_size < minimal_size_to_delete)
             {
-                candidate.push_back(node_byte_size);
+                minimal_size_to_delete = node_byte_size;
             }
 
             return true;
         };
-        root->visit(step2_Fn);
-
-        // search min
-        size_t minimal_size_to_delete = candidate[0];
-        for (size_t i = 1; i < candidate.size(); ++i)
-        {
-            if (candidate[i] < minimal_size_to_delete)
-                minimal_size_to_delete = candidate[i];
-        }
-        
+        root->visit(step2_Fn);       
         printf("Result = %zd\n", minimal_size_to_delete);
     }
 
