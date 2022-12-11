@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <assert.h>
 #include "../day5_input.h"
 #include <vector>
