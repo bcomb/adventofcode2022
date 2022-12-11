@@ -12,10 +12,10 @@ struct Range
     uint8_t min;
     uint8_t max;
 
-    // Check if r is inside the Range
-    bool inside(const Range& r) const
+    // Check if 'r' overlap this (care if this is fully inside 'r' return false)
+    bool overlap(const Range& r) const
     {
-        return r.min >= min && r.max <= max;
+        return (r.min >= min && r.min <= max) || (r.max >= min && r.max <= max);
     }
 };
 
@@ -32,7 +32,7 @@ const char* getRanges(const char* input, Range& r0, Range& r1)
 
     // Finished by '\n' or '\0'
     const char* end = strchr(input, '\n');
-    if(end == nullptr)
+    if (end == nullptr)
         end = strchr(input, '\0');
     return end;
 }
@@ -40,16 +40,16 @@ const char* getRanges(const char* input, Range& r0, Range& r1)
 int main(int argc, char* argv[])
 {
     const char* input = day4_input;
-    int fully_contain_count = 0;
+    int overlap_count = 0;
     do
     {
         Range r0, r1;
         input = getRanges(input, r0, r1);
-        fully_contain_count += r0.inside(r1) || r1.inside(r0);
+        overlap_count += r0.overlap(r1) || r1.overlap(r0);
         ++input; // skipt last char
     } while (*(input - 1) != '\0');
 
-    printf("result= %d", fully_contain_count);
+    printf("result= %d", overlap_count);
 
     return 0;
 }
