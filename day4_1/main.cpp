@@ -19,7 +19,7 @@ struct Range
     }
 };
 
-// Parse line and return number of read char
+// Parse line and return pointer on the last char of the line
 const char* getRanges(const char* input, Range& r0, Range& r1)
 {
     r0.min = atoi(input);
