@@ -47,14 +47,14 @@ const char* execute(const char* input, Supplies& s)
     input = strchr(input, 'o') + 1; // point after the 'o' of 'to'
     int to = atoi(input) - 1;
     const char* end_line = strchr(input, '\n');
-    if(end_line == nullptr)
+    if (end_line == nullptr)
         end_line = strchr(input, '\0');
 
     // Execute
     s[to].insert(s[to].begin(), move, ' ');
     for (int i = 0; i < move; ++i)
-    {        
-        s[to][i] = s[from][move-i-1];
+    {
+        s[to][i] = s[from][i];
     }
     s[from].erase(s[from].begin(), s[from].begin() + move);
 
@@ -63,7 +63,7 @@ const char* execute(const char* input, Supplies& s)
 
 int main(int argc, char* argv[])
 {
-    const char* input = day5_input_sample;
+    const char* input = day5_input;
 
     Supplies s;
     input = parseSupplies(input, s);
@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
     {
         input = execute(input, s);
     } while (*(input - 1) != '\0');
-    
+
     char str[16] = {};
     for (size_t i = 0; i < s.size(); ++i)
     {
